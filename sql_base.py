@@ -10,7 +10,8 @@ sql.execute("""CREATE TABLE IF NOT EXISTS RECORD (
                              DEFAULT math,
     ege_choose_state INTEGER NOT NULL
                              DEFAULT (10),
-    ege_links        STRING
+    ege_num          INTEGER NOT NULL
+                             DEFAULT (10)
 )""")
 
 
@@ -36,15 +37,15 @@ def usr_update(usr_id, data: dict):
         # "USER_ID" его нельзя вообще менять но мало ли мб захочу
         # "ege_type" предмет
         # "ege_choose_state" стадия выбора
-        # "ege_links" ссылки, между ними □
+        # "ege_num" номер задачи
         if key == "USER_ID":
             print('ошибк:', 'USER_ID НЕЛЬЗЯ МЕНЯТЬ' * 10)
         elif key == "ege_type":
             sql.execute('UPDATE RECORD SET ege_type = (?) WHERE USER_ID == (?)', (data[key], usr_id))
         elif key == "ege_choose_state":
             sql.execute('UPDATE RECORD SET ege_choose_state = (?) WHERE USER_ID == (?)', (data[key], usr_id))
-        elif key == "ege_links":
-            sql.execute('UPDATE RECORD SET ege_links = (?) WHERE USER_ID == (?)', (data[key], usr_id))
+        elif key == "ege_num":
+            sql.execute('UPDATE RECORD SET ege_num = (?) WHERE USER_ID == (?)', (data[key], usr_id))
         db.commit()
 
 
@@ -57,6 +58,6 @@ def usr_get(usr_id, data: str):
     sql.execute('SELECT * FROM RECORD WHERE USER_ID == (?)', (usr_id,))
     usr_data_lst = sql.fetchone()
     num_dict = {
-        'USER_ID': 0, 'ege_type': 1, 'ege_choose_state': 2, 'ege_links': 3
+        'USER_ID': 0, 'ege_type': 1, 'ege_choose_state': 2, 'ege_num': 3
     }
     return usr_data_lst[num_dict[data]]

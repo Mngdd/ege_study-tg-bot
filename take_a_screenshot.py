@@ -7,7 +7,7 @@ import time
 from PIL import Image, ImageOps
 
 
-def get_website_screenshot(url):
+def get_website_screenshot(url, obj, usr_id, rand_num):
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # не открывать окно хрома
     chrome_options.add_argument('--start-maximized')  # фул скрин
@@ -15,7 +15,7 @@ def get_website_screenshot(url):
     driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
     driver.get(url)
     time.sleep(2)
-    print('searching for task...')
+    print('task search...')
     try:
         element = driver.find_element(By.CLASS_NAME, "nobreak")
     except:
@@ -27,10 +27,8 @@ def get_website_screenshot(url):
     driver.set_window_size(width, height)
     time.sleep(2)
     print('taking a screenshot!')
-    element.screenshot('task_ege_math.png')
+    name = f'task-{obj}-{usr_id}_{rand_num}.png'
+    element.screenshot(name)
     driver.quit()
-    ImageOps.expand(Image.open('task_ege_math.png'), border=10, fill='white').save('task_ege_math.png')
-    return 'task_ege_math.png'
-
-
-# get_website_screenshot('https://math-ege.sdamgia.ru/problem?id=26662')
+    ImageOps.expand(Image.open(name), border=10, fill='white').save(name)
+    return name

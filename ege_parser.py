@@ -12,7 +12,7 @@ def parsy_by_theory(num, object_type):  # измененная ф-ция parse_b
         ''.join(['https://ege-study.ru/ru/ege/materialy/russkij-yazyk/' if object_type == 'rus' else
                  'https://ege-study.ru/ru/ege/materialy/informatika/'])
 
-    #                  \/ \/ ДОДЕЛАТЬ \/ \/
+    #                  \/ \/ ДОДЕЛАТЬ (я забыл че это лол) \/ \/
 
     # URL = f"https://ege-study.ru/ru/ege/materialy/matematika/"
     # response = requests.get(URL, headers=HEADERS)
