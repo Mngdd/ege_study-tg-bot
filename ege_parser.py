@@ -54,21 +54,23 @@ def parse_by_num(num, object_type):
         tmp['link'] = [x.get('href') for x in tmp['link']]
         tmp['txt'] = [x.text for x in tmp['txt']]
         comps.append(tmp)
+
     for i in range(len(comps)):  # так то цикл особо смысла не несет, кроме того что все
         tmp = items_nums[i].find('span', class_="pcat_num")  # доп задачи отмечает как None
         if tmp is not None:
             comps[i]['task_num'] = tmp.text
         else:
             comps[i]['task_num'] = tmp
-    # for comp in comps:  табличку делоет
-    #     print(comp['task_num'])
-    #     for i in range(len(comp['link'])):
-    #         if i % 2 == 0:
-    #             print(f"https://{object_type}-ege.sdamgia.ru{comp['link'][i]}  {comp['txt'][i]}")
+
+    for comp in comps:  # табличку делоет
+        print(comp['task_num'])
+        for i in range(len(comp['link'])):
+            if i % 2 == 0:
+                print(f"https://{object_type}-ege.sdamgia.ru{comp['link'][i]}  {comp['txt'][i]}")
     try:
         print('PARSE BY NUM SUCCESS!')
-        return parse_by_task(f"https://{object_type}-ege.sdamgia.ru{random.choice(comps[num - 1]['link'])}&print=true",
-                             object_type)
+        return parse_by_task(f"https://{object_type}-ege.sdamgia.ru"
+                             f"{random.choice(comps[num - 1]['link'])}&print=true", object_type)
     except IndexError:
         return 'INDEX_ERR'
 
@@ -83,3 +85,6 @@ def dog_get():
     response = requests.get('https://dog.ceo/api/breeds/image/random', headers=HEADERS)
     soup = str(BeautifulSoup(response.content, 'html.parser'))[12:]
     return ''.join(['/' if i == '\\' else i for i in soup[:-21]])
+
+
+parse_by_num(12, 'inf')

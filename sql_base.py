@@ -11,7 +11,9 @@ sql.execute("""CREATE TABLE IF NOT EXISTS RECORD (
     ege_choose_state INTEGER NOT NULL
                              DEFAULT (10),
     ege_num          INTEGER NOT NULL
-                             DEFAULT (10)
+                             DEFAULT (10),
+    ege_pic_name     STRING  NOT NULL
+                             DEFAULT ('error_pic.png') 
 )""")
 
 
@@ -38,6 +40,7 @@ def usr_update(usr_id, data: dict):
         # "ege_type" предмет
         # "ege_choose_state" стадия выбора
         # "ege_num" номер задачи
+        # "ege_pic_name" название скриншота задания
         if key == "USER_ID":
             print('ошибк:', 'USER_ID НЕЛЬЗЯ МЕНЯТЬ' * 10)
         elif key == "ege_type":
@@ -46,6 +49,8 @@ def usr_update(usr_id, data: dict):
             sql.execute('UPDATE RECORD SET ege_choose_state = (?) WHERE USER_ID == (?)', (data[key], usr_id))
         elif key == "ege_num":
             sql.execute('UPDATE RECORD SET ege_num = (?) WHERE USER_ID == (?)', (data[key], usr_id))
+        elif key == "ege_pic_name":
+            sql.execute('UPDATE RECORD SET ege_pic_name = (?) WHERE USER_ID == (?)', (data[key], usr_id))
         db.commit()
 
 
@@ -58,6 +63,6 @@ def usr_get(usr_id, data: str):
     sql.execute('SELECT * FROM RECORD WHERE USER_ID == (?)', (usr_id,))
     usr_data_lst = sql.fetchone()
     num_dict = {
-        'USER_ID': 0, 'ege_type': 1, 'ege_choose_state': 2, 'ege_num': 3
+        'USER_ID': 0, 'ege_type': 1, 'ege_choose_state': 2, 'ege_num': 3, 'ege_pic_name': 4
     }
     return usr_data_lst[num_dict[data]]

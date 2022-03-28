@@ -50,11 +50,11 @@ def dev2(msg, change_me=None):
 
 @bot.message_handler(commands=['DEL'])
 def dev3(msg):
-    if msg.from_user.id == 569255452:
-        usr_delete(str(msg.from_user.id))
-        bot.send_message(msg.chat.id, f'снизу должно быть пусто\n{usr_data(str(msg.from_user.id))}')
-    else:
-        bot.send_message(msg.chat.id, 'доступ запрещен лол')
+    # if msg.from_user.id == 569255452:
+    usr_delete(str(msg.from_user.id))
+    bot.send_message(msg.chat.id, f'снизу должно быть пусто\n{usr_data(str(msg.from_user.id))}')
+    # else:
+    #     bot.send_message(msg.chat.id, 'доступ запрещен лол')
 
 
 @bot.message_handler(commands=['ege_theory'])
@@ -110,18 +110,20 @@ def rand_ege_question(msg, ege_link, curr_num, all_nums):
         bot.reply_to(msg, f'ошибка поиска, я сломался лол')
     else:
         rand_num = random.randint(204, 863)
-        photo_name = get_website_screenshot(ege_link, usr_get(str(msg.from_user.id), "ege_type"),
-                                            msg.from_user.id, rand_num)
+        get_website_screenshot(ege_link, usr_get(str(msg.from_user.id), "ege_type"),
+                               msg.from_user.id, rand_num)
         bot.edit_message_text(chat_id=search1.chat.id, message_id=search1.message_id, text='Готово!')
-        bot.send_photo(msg.chat.id, photo=open(photo_name, 'rb'))
+        bot.send_photo(msg.chat.id, photo=open("tmp_pics\\" + usr_get(str(msg.from_user.id),
+                                                       "ege_pic_name"), 'rb'))
         bot.send_message(msg.chat.id, f'<a href="{ege_link}"><b>РЕШЕНИЕ ЗАДАЧИ №'
                                       f'{usr_get(str(msg.from_user.id), "ege_num")}</b></a>',
                          parse_mode='HTML', disable_web_page_preview=True)
         time.sleep(1)
         print('DELETING IMAGE...')
         time.sleep(1)
-        os.remove(f'task-{usr_get(str(msg.from_user.id), "ege_type")}-'
+        os.remove("tmp_pics\\" + f'task-{usr_get(str(msg.from_user.id), "ege_type")}-'
                   f'{msg.from_user.id}_{rand_num}.png')
+        usr_update(str(msg.from_user.id), {'ege_pic_name': 'error_pic.png'})
     bot.send_sticker(msg.chat.id, "https://i.ibb.co/y5cY6L4/SHKA.webp")
     usr_update(str(msg.from_user.id), {'ege_choose_state': 0})
 
@@ -144,11 +146,6 @@ def random_absolute(msg):
 @bot.message_handler()
 def check_commands(msg):
     global ege_links
-
-    # маты плохо
-    mati_ploho = PymorphyProc.test(u'Здесь текст с матерками')
-    bot.send_message(msg.chat.id, mati_ploho)
-
     # назад перемотка
     if msg.text == "🔙 закрыть это меню" or msg.text == "🔙 назад" or msg.text == '!назад':
         markup_type = clear_markups()

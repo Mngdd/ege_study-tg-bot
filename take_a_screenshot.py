@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager  # чтоб не кач
 from selenium.webdriver.chrome.options import Options
 import time
 from PIL import Image, ImageOps
+from sql_base import *
 
 
 def get_website_screenshot(url, obj, usr_id, rand_num):
@@ -28,7 +29,8 @@ def get_website_screenshot(url, obj, usr_id, rand_num):
     time.sleep(2)
     print('taking a screenshot!')
     name = f'task-{obj}-{usr_id}_{rand_num}.png'
-    element.screenshot(name)
+    element.screenshot("tmp_pics\\" + name)
     driver.quit()
-    ImageOps.expand(Image.open(name), border=10, fill='white').save(name)
-    return name
+    ImageOps.expand(Image.open("tmp_pics\\" + name), border=10, fill='white').save("tmp_pics\\" + name)
+    usr_update(usr_id, {"ege_pic_name": name})
+    print('successfully saved', name)
