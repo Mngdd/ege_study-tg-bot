@@ -101,9 +101,9 @@ def send_welcome(msg):
 def rand_ege_question(msg, ege_link, curr_num, all_nums):
     bot.send_message(msg.chat.id, '🧐')
     search1 = bot.send_message(msg.chat.id,
-                               f'ищем рандомную {usr_get(str(msg.from_user.id), "ege_num")}ую задачу по '
+                               f'ищем случайную {usr_get(str(msg.from_user.id), "ege_num")}ую задачу по '
                                f'{ege_names[usr_get(str(msg.from_user.id), "ege_type")]} '
-                               f'пджи\nэто {curr_num} задача из {all_nums}\n'
+                               f'подожди\nэто {curr_num} задача из {all_nums}\n'
                                f'может занять какое-то время...')
     print('I\'m tryin to parse....')
     usr_update(str(msg.from_user.id), {'ege_choose_state': 7})  # хз просто блочить ввод, мб прокатит
