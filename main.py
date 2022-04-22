@@ -16,9 +16,10 @@ BOT_TOKEN = "5095740599:AAEkSiFF83WwMCo4oWlU8_ejuPG7IusGmOs"
 ege_links = []
 lol = [f'кста седня {date.today()}', 'ыстык пишстер', 'бигаэ по полю весело кабанчик', 'капибары.....',
        'ватружка']
-idk = ['я не понимаю', 'чеу', 'ай донт адерстенд', 'че', 'ага да', 'а?', 'пиши яснее',
-       'ниче не понял', 'что?', 'я не понял', 'не знаю такую команду',
-       'неизвестная команда', 'еще раз', '🥺', '🤯']
+# idk = ['я не понимаю', 'чеу', 'ай донт адерстенд', 'че', 'ага да', 'а?', 'пиши яснее',
+#        'ниче не понял', 'что?', 'я не понял', 'не знаю такую команду',
+#        'неизвестная команда', 'еще раз', '🥺', '🤯']
+idk = ['я не понимаю', 'пишите яснее', 'ничего не понял', 'что?', 'я не понял', 'неизвестная команда']
 ege_names = {
     'math': 'математике', 'rus': 'русскому', 'inf': 'инфе'
 }
@@ -63,16 +64,16 @@ def send_theory(msg):
     usr_update(str(msg.from_user.id), {'ege_choose_state': 4})
 
 
-@bot.message_handler(commands=['cat'])
-def send_cats(msg):
-    CatPhoto = cat_get()
-    bot.send_message(msg.chat.id, f"рандомный кот\n{CatPhoto}")
-
-
-@bot.message_handler(commands=['dog'])
-def send_dogs(msg):
-    DogPhoto = dog_get()
-    bot.send_message(msg.chat.id, f"рандомный собака\n{DogPhoto}")
+# @bot.message_handler(commands=['cat'])
+# def send_cats(msg):
+#     CatPhoto = cat_get()
+#     bot.send_message(msg.chat.id, f"рандомный кот\n{CatPhoto}")
+#
+#
+# @bot.message_handler(commands=['dog'])
+# def send_dogs(msg):
+#     DogPhoto = dog_get()
+#     bot.send_message(msg.chat.id, f"рандомный собака\n{DogPhoto}")
 
 
 @bot.message_handler(commands=['ege_task'])
@@ -84,15 +85,16 @@ def call_ege_task(msg):
 @bot.message_handler(commands=['start'])
 def send_welcome(msg):
     bot.send_message(msg.chat.id, '🥳')
-    bot.reply_to(msg, f'дарова карова\nID {msg.from_user.id}')
+    # bot.reply_to(msg, f'дарова карова\nID {msg.from_user.id}')
+    bot.reply_to(msg, f'Привет!')
     usr_enlist(str(msg.from_user.id))
 
 
-@bot.message_handler(commands=['info'])
-def send_help(msg):
-    bot.reply_to(msg, f"разраб - https://instagram.com/therock\n рандом задача по егэ - /ege_task\n"
-                      f"ьжььжжььь - /random\nтестить приколы ржаки - тест\nкошка или собака - /cat /dog\n"
-                      f"теория по задаче - /ege_theory (в разработке)")
+# @bot.message_handler(commands=['info'])
+# def send_help(msg):
+#     bot.reply_to(msg, f"разраб - https://instagram.com/therock\n рандом задача по егэ - /ege_task\n"
+#                       f"ьжььжжььь - /random\nтестить приколы ржаки - тест\nкошка или собака - /cat /dog\n"
+#                       f"теория по задаче - /ege_theory (в разработке)")
     # bot.send_message(msg.chat.id, f"||spoiler||", parse_mode='MarkdownV2')
 
 
