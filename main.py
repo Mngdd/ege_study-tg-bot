@@ -60,7 +60,7 @@ def dev3(msg):
 
 @bot.message_handler(commands=['ege_theory'])
 def send_theory(msg):
-    bot.reply_to(msg, 'Какой предмет выбирешь?', reply_markup=gen_markup_ege_type())
+    bot.reply_to(msg, 'Выберите предмет?', reply_markup=gen_markup_ege_type())
     usr_update(str(msg.from_user.id), {'ege_choose_state': 4})
 
 
@@ -78,7 +78,7 @@ def send_theory(msg):
 
 @bot.message_handler(commands=['ege_task'])
 def call_ege_task(msg):
-    bot.reply_to(msg, 'Какой предмет выбирешь?', reply_markup=gen_markup_ege_type())
+    bot.reply_to(msg, 'Выберите предмет?', reply_markup=gen_markup_ege_type())
     usr_update(str(msg.from_user.id), {'ege_choose_state': 1})
 
 
@@ -166,18 +166,20 @@ def check_commands(msg):
             usr_update(str(msg.from_user.id), {'ege_choose_state': n})
             markup_type = gen_markup_ege_18() if \
                 usr_get(str(msg.from_user.id), "ege_type") == 'math' else gen_markup_ege_27()
-        bot.send_message(msg.chat.id, 'лады ✅', reply_markup=markup_type)
+        # bot.send_message(msg.chat.id, 'лады ✅', reply_markup=markup_type)
+        bot.send_message(msg.chat.id, 'Хорошо ✅', reply_markup=markup_type)
+
 
     # номер задачи егэ
     elif msg.text.isdigit():
         if int(msg.text) <= ege_types_len[usr_get(str(msg.from_user.id), "ege_type")]:
             usr_update(str(msg.from_user.id), {'ege_num': int(msg.text)})
             if usr_get(str(msg.from_user.id), "ege_choose_state") == 2:
-                bot.send_message(msg.chat.id, 'Подожди немног', reply_markup=clear_markups())
+                bot.send_message(msg.chat.id, 'Подожди немного', reply_markup=clear_markups())
                 ege_links = parse_by_num(usr_get(str(msg.from_user.id), "ege_num"),
                                          usr_get(str(msg.from_user.id), "ege_type"))
-                bot.send_message(msg.chat.id, f'Сколько задач скинуть?\nОт 1 до {len(ege_links)}\n'
-                                              f'количество пиши с \'!\'\nпример: !5 - я скину 5 задач, '
+                bot.send_message(msg.chat.id, f'Сколько задач отправить?\nОт 1 до {len(ege_links)}\n'
+                                              f'количество пиши с \'!\'\nпример: !5 - я отправлю 5 задач, '
                                               f'!назад - перейти к выбору номера')
                 usr_update(str(msg.from_user.id), {'ege_choose_state': 3})
             elif usr_get(str(msg.from_user.id), "ege_choose_state") == 5:
@@ -196,7 +198,7 @@ def check_commands(msg):
     elif msg.text == "📗Русский":
         usr_update(str(msg.from_user.id), {'ege_type': 'rus'})
         if usr_get(str(msg.from_user.id), "ege_choose_state") == 1:
-            bot.send_message(msg.chat.id, 'Номер задачи какой?', reply_markup=gen_markup_ege_27())
+            bot.send_message(msg.chat.id, 'Какой номер задачи?', reply_markup=gen_markup_ege_27())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 2})
         elif usr_get(str(msg.from_user.id), "ege_choose_state") == 4:
             bot.send_message(msg.chat.id, 'какое задание?\nв разработке', reply_markup=gen_markup_ege_27())
@@ -205,7 +207,7 @@ def check_commands(msg):
     elif msg.text == "📙Математика":
         usr_update(str(msg.from_user.id), {'ege_type': 'math'})
         if usr_get(str(msg.from_user.id), "ege_choose_state") == 1:
-            bot.send_message(msg.chat.id, 'Номер задачи какой?', reply_markup=gen_markup_ege_18())
+            bot.send_message(msg.chat.id, 'Какой номер задачи?', reply_markup=gen_markup_ege_18())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 2})
         elif usr_get(str(msg.from_user.id), "ege_choose_state") == 4:
             bot.send_message(msg.chat.id, 'какое задание?\nв разработке', reply_markup=gen_markup_ege_18())
@@ -214,7 +216,7 @@ def check_commands(msg):
     elif msg.text == "📘Информатика":
         usr_update(str(msg.from_user.id), {'ege_type': 'inf'})
         if usr_get(str(msg.from_user.id), "ege_choose_state") == 1:
-            bot.send_message(msg.chat.id, 'Номер задачи какой?', reply_markup=gen_markup_ege_27())
+            bot.send_message(msg.chat.id, 'Какой номер задачи?', reply_markup=gen_markup_ege_27())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 2})
         elif usr_get(str(msg.from_user.id), "ege_choose_state") == 4:
             bot.send_message(msg.chat.id, 'какое задание?\nв разработке', reply_markup=gen_markup_ege_27())
