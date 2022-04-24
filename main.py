@@ -64,16 +64,16 @@ def send_theory(msg):
     usr_update(str(msg.from_user.id), {'ege_choose_state': 4})
 
 
-# @bot.message_handler(commands=['cat'])
-# def send_cats(msg):
-#     CatPhoto = cat_get()
-#     bot.send_message(msg.chat.id, f"рандомный кот\n{CatPhoto}")
-#
-#
-# @bot.message_handler(commands=['dog'])
-# def send_dogs(msg):
-#     DogPhoto = dog_get()
-#     bot.send_message(msg.chat.id, f"рандомный собака\n{DogPhoto}")
+@bot.message_handler(commands=['cat'])
+def send_cats(msg):
+    CatPhoto = cat_get()
+    bot.send_message(msg.chat.id, f"рандомный кот\n{CatPhoto}")
+
+
+@bot.message_handler(commands=['dog'])
+def send_dogs(msg):
+    DogPhoto = dog_get()
+    bot.send_message(msg.chat.id, f"рандомный собака\n{DogPhoto}")
 
 
 @bot.message_handler(commands=['ege_task'])
