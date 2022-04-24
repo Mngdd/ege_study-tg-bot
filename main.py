@@ -185,7 +185,7 @@ def check_commands(msg):
             elif usr_get(str(msg.from_user.id), "ege_choose_state") == 5:
                 bot.send_message(msg.chat.id,
                                  f'пока только ссылку на всю теорию могу дать\n'
-                                 f'{parsy_by_theory(usr_get(str(msg.from_user.id), "ege_num"), usr_get(str(msg.from_user.id), "ege_type"))}',
+                                 f'{parse_by_theory(usr_get(str(msg.from_user.id), "ege_num"), usr_get(str(msg.from_user.id), "ege_type"))}',
                                  reply_markup=clear_markups())
                 usr_update(str(msg.from_user.id), {'ege_choose_state': 0})
             else:
