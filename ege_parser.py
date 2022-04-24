@@ -10,68 +10,54 @@ HEADERS = {
 
 
 def parse_by_theory(num, object_type):  # измененная ф-ция parse_by_num()
-    return 'https://ege-study.ru/ru/ege/materialy/matematika/' if object_type == 'math' else \
-        ''.join(['https://ege-study.ru/ru/ege/materialy/russkij-yazyk/' if object_type == 'rus' else
-                 'https://ege-study.ru/ru/ege/materialy/informatika/'])
+    # return 'https://ege-study.ru/ru/ege/materialy/matematika/' if object_type == 'math' else \
+    #     ''.join(['https://ege-study.ru/ru/ege/materialy/russkij-yazyk/' if object_type == 'rus' else
+    #              'https://ege-study.ru/ru/ege/materialy/informatika/'])
 
-    #                  \/ \/ ДОДЕЛАТЬ (я забыл че это лол) \/ \/
-
-    # URL = f"https://ege-study.ru/ru/ege/materialy/matematika/"
-    # response = requests.get(URL, headers=HEADERS)
-    # soup = BeautifulSoup(response.content, 'html.parser')
-    # items = soup.find_all('ul', class_='tab')
-    # links = [[i.get('href') for i in item.find_all('a')] for item in items]
-    # print('======================', *items[1], '======================', sep='\n')
-    # return links
+    typo = {
+        'inf': 'informatika', 'rus': 'russkij-yazyk', 'math': 'matematika'
+    }
+    response = requests.get(f"https://ege-study.ru/ru/ege/materialy/{typo[object_type]}/", headers=HEADERS)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    if object_type == 'inf':
+        all_blocks = soup.find_all('div', class_='span4')
+        titles = [str(el[7:]) for lst in [[task.get('title') for task in el.find_all('a') if task.get('title')]
+                                          for el in all_blocks] for el in lst]
+        titles = [int(el.strip()[1:][:el[1:].index('.')]) if el != '10' else 10 for el in titles]
+        links = [el for lst in [[task.get('href') for task in el.find_all('a')] for el in all_blocks] for el in lst]
+        return f"https://ege-study.ru/{sorted(zip(titles, links), key=lambda x: x[0])[num - 1][1]}"
+    elif object_type == 'math':
+        all_blocks = soup.find_all("a", target="_blank", rel="external nofollow noopener")
+        all_tasks = [(int(el.text.split()[1][:-1]), el.get('href')) for el in all_blocks if 'Задание' in el.text]
+        all_tasks.append((10, "/zadanie-10-ege-po-matematike-teoriya-veroyatnostej-povyshennyj-uroven-slozhnosti"))
+        all_tasks.append((9, "/ru/ege/podgotovka/matematika/zadanie-9-ege-po-matematike-grafiki-funkcij/"))
+        all_tasks.sort(key=lambda x: x[0])
+        return f"https://ege-study.ru/" \
+               f"{all_tasks[num - 1][1]}"
+    else:  # русич
+        tasks = soup.find('ul', class_='tab')
+        return f"https://ege-study.ru/{[el.get('href') for el in tasks.find_all('a')][num - 1]}"
 
 
 def parse_by_task(URL, object_type, name=None):  # name для дебага
-    # print(f'URL --> {URL}\n{name}\n')
+    # print(f'URL --> {URL}\n{name}\n')  # дебаг
     response = requests.get(URL, headers=HEADERS)
     soup = BeautifulSoup(response.content, 'html.parser')
     items = soup.find_all('div', class_='prob_maindiv')
-    comps = [{
+    link = [{
         'link': f'https://{object_type}-ege.sdamgia.ru' + item.find('a').get('href')
     }
         for item in items]
-    # for comp in range(len(comps)):
+    # for comp in range(len(comps)):  # дебаг
     #     print(comps[comp]['link'])
     print('PARSE BY SUBTASK SUCCESS!\n')
-    return comps
+    return link
 
 
 def parse_by_num(num, object_type):
     URL = f"https://{object_type}-ege.sdamgia.ru/prob_catalog"
     response, ege_task_list = requests.get(URL, headers=HEADERS), []
     soup = BeautifulSoup(response.content, 'html.parser')
-
-    # старое
-
-    # items = soup.find_all('div', class_='cat_children')
-    # items_nums = soup.find_all('b', class_='cat_name')  # крч можно было бы и проще типа запихачить cat name в
-    # # айтем и там искать номер и ссылку + текст задачи но зачем лол
-    #
-    # for item in items:
-    #     tmp = {
-    #         'link': [x.get('href') for x in item.find_all('a')],
-    #         'txt': [x.text for x in item.find_all('a')],
-    #         'num': item
-    #     }
-    #     ege_task_list.append(tmp)
-    #     print(item, '\n\n')
-    #
-    # for i in range(len(ege_task_list)):  # так то цикл особо смысла не несет, кроме того что все доп задачи помечает как None
-    #     tmp = items_nums[i].find('span', class_="pcat_num")
-    #     if tmp is not None:
-    #         ege_task_list[int(tmp.text) - 1]['task_num'] = tmp.text
-    #     else:
-    #         ege_task_list[i]['task_num'] = tmp
-    # print('\n' * 10)
-    # for i in soup.find_all('a', class_='cat_name'):
-    #     if i.find('span') and int(i.find('span').text) - 1 not in ege_task_list:
-    #         ege_task_list[int(i.find('span').text) - 1]['task_num'] = i.find('span').text
-    #         ege_task_list[int(i.find('span').text) - 1]['txt'] = [i.find('span').next_sibling[2:]]
-    #         ege_task_list[int(i.find('span').text) - 1]['link'] = [i.get('href')]
 
     for task in soup.find_all('div', class_="cat_category"):  # проходимса по всем задачм
         real_task = task.find('span', class_='pcat_num')  # проверка что задача имеет номер т.е из егэ
