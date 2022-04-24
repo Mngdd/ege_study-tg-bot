@@ -95,7 +95,7 @@ def send_welcome(msg):
 #     bot.reply_to(msg, f"разраб - https://instagram.com/therock\n рандом задача по егэ - /ege_task\n"
 #                       f"ьжььжжььь - /random\nтестить приколы ржаки - тест\nкошка или собака - /cat /dog\n"
 #                       f"теория по задаче - /ege_theory (в разработке)")
-    # bot.send_message(msg.chat.id, f"||spoiler||", parse_mode='MarkdownV2')
+# bot.send_message(msg.chat.id, f"||spoiler||", parse_mode='MarkdownV2')
 
 
 def rand_ege_question(msg, ege_link, curr_num, all_nums):
@@ -116,7 +116,7 @@ def rand_ege_question(msg, ege_link, curr_num, all_nums):
                                msg.from_user.id, rand_num)
         bot.edit_message_text(chat_id=search1.chat.id, message_id=search1.message_id, text='Готово!')
         bot.send_photo(msg.chat.id, photo=open("tmp_pics\\" + usr_get(str(msg.from_user.id),
-                                                       "ege_pic_name"), 'rb'))
+                                                                      "ege_pic_name"), 'rb'))
         bot.send_message(msg.chat.id, f'<a href="{ege_link}"><b>РЕШЕНИЕ ЗАДАЧИ №'
                                       f'{usr_get(str(msg.from_user.id), "ege_num")}</b></a>',
                          parse_mode='HTML', disable_web_page_preview=True)
@@ -124,7 +124,7 @@ def rand_ege_question(msg, ege_link, curr_num, all_nums):
         print('DELETING IMAGE...')
         time.sleep(1)
         os.remove("tmp_pics\\" + f'task-{usr_get(str(msg.from_user.id), "ege_type")}-'
-                  f'{msg.from_user.id}_{rand_num}.png')
+                                 f'{msg.from_user.id}_{rand_num}.png')
         usr_update(str(msg.from_user.id), {'ege_pic_name': 'error_pic.png'})
     bot.send_sticker(msg.chat.id, "https://i.ibb.co/y5cY6L4/SHKA.webp")
     usr_update(str(msg.from_user.id), {'ege_choose_state': 0})
@@ -169,9 +169,9 @@ def check_commands(msg):
         # bot.send_message(msg.chat.id, 'лады ✅', reply_markup=markup_type)
         bot.send_message(msg.chat.id, 'Хорошо ✅', reply_markup=markup_type)
 
-
     # номер задачи егэ
-    elif msg.text.isdigit():
+    elif msg.text.isdigit():  # т.е мы получаем номер задачи ege_choose_state 2 = выбрали задачу и ждем кол-во.
+        # 3 = получили кол-во, стираем метки и далее. 5 = получаем номер задачи по которой теорию скинуть надо.
         if int(msg.text) <= ege_types_len[usr_get(str(msg.from_user.id), "ege_type")]:
             usr_update(str(msg.from_user.id), {'ege_num': int(msg.text)})
             if usr_get(str(msg.from_user.id), "ege_choose_state") == 2:
@@ -183,10 +183,11 @@ def check_commands(msg):
                                               f'!назад - перейти к выбору номера')
                 usr_update(str(msg.from_user.id), {'ege_choose_state': 3})
             elif usr_get(str(msg.from_user.id), "ege_choose_state") == 5:
-                bot.send_message(msg.chat.id,
-                                 f'пока только ссылку на всю теорию могу дать\n'
-                                 f'{parse_by_theory(usr_get(str(msg.from_user.id), "ege_num"), usr_get(str(msg.from_user.id), "ege_type"))}',
-                                 reply_markup=clear_markups())
+                bot.send_message(msg.chat.id, f'Вот <a href="'
+                                              f'{parse_by_theory(usr_get(str(msg.from_user.id), "ege_num"), usr_get(str(msg.from_user.id), "ege_type"))}'
+                                              f'"><b>ссылка</b></a>',
+                                 parse_mode='HTML', disable_web_page_preview=True, reply_markup=clear_markups())
+                bot.send_message(msg.chat.id, '🥸')
                 usr_update(str(msg.from_user.id), {'ege_choose_state': 0})
             else:
                 bot.send_message(msg.chat.id, f'ошибка {usr_get(str(msg.from_user.id), "ege_num")}',
@@ -201,7 +202,9 @@ def check_commands(msg):
             bot.send_message(msg.chat.id, 'Какой номер задачи?', reply_markup=gen_markup_ege_27())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 2})
         elif usr_get(str(msg.from_user.id), "ege_choose_state") == 4:
-            bot.send_message(msg.chat.id, 'какое задание?\nв разработке', reply_markup=gen_markup_ege_27())
+            bot.send_message(msg.chat.id, 'Какое задание?\nКстати, полезный курс \\/\n'
+                                          'https://stepik.org/lesson/82797/step/1?unit=59457',
+                             reply_markup=gen_markup_ege_27())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 5})
 
     elif msg.text == "📙Математика":
@@ -210,7 +213,7 @@ def check_commands(msg):
             bot.send_message(msg.chat.id, 'Какой номер задачи?', reply_markup=gen_markup_ege_18())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 2})
         elif usr_get(str(msg.from_user.id), "ege_choose_state") == 4:
-            bot.send_message(msg.chat.id, 'какое задание?\nв разработке', reply_markup=gen_markup_ege_18())
+            bot.send_message(msg.chat.id, 'Какое задание?', reply_markup=gen_markup_ege_18())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 5})
 
     elif msg.text == "📘Информатика":
@@ -219,7 +222,7 @@ def check_commands(msg):
             bot.send_message(msg.chat.id, 'Какой номер задачи?', reply_markup=gen_markup_ege_27())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 2})
         elif usr_get(str(msg.from_user.id), "ege_choose_state") == 4:
-            bot.send_message(msg.chat.id, 'какое задание?\nв разработке', reply_markup=gen_markup_ege_27())
+            bot.send_message(msg.chat.id, 'Какое задание?', reply_markup=gen_markup_ege_27())
             usr_update(str(msg.from_user.id), {'ege_choose_state': 5})
     elif msg.text[0] == '!' and msg.text[1:].isdigit() and \
             usr_get(str(msg.from_user.id), "ege_choose_state") == 3:
